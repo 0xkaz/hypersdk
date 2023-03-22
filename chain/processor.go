@@ -9,6 +9,7 @@ import (
 
 	"github.com/ava-labs/avalanchego/database"
 	"github.com/ava-labs/avalanchego/trace"
+	"github.com/ava-labs/avalanchego/utils/set"
 
 	"github.com/ava-labs/hypersdk/tstate"
 )
@@ -39,17 +40,17 @@ func NewProcessor(tracer trace.Tracer, b *StatelessBlock) *Processor {
 func (p *Processor) Prefetch(ctx context.Context, db Database) {
 	ctx, span := p.tracer.Start(ctx, "Processor.Prefetch")
 	p.db = db
+	sm := p.blk.vm.StateManager()
 	go func() {
 		defer span.End()
 
 		// Store required keys for each set
-		alreadyFetched := map[string]struct{}{}
+		alreadyFetched := set.Set[string]{}
 		for _, tx := range p.blk.GetTxs() {
 			storage := map[string][]byte{}
-			for _, k := range tx.StateKeys() {
+			for _, k := range tx.StateKeys(sm) {
 				sk := string(k)
-				_, ok := alreadyFetched[sk]
-				if ok {
+				if alreadyFetched.Contains(sk) {
 					continue
 				}
 				v, err := db.GetValue(ctx, k)
@@ -58,7 +59,7 @@ func (p *Processor) Prefetch(ctx context.Context, db Database) {
 				} else if err != nil {
 					panic(err)
 				}
-				alreadyFetched[sk] = struct{}{}
+				alreadyFetched.Add(sk)
 				storage[sk] = v
 			}
 			p.readyTxs <- &txData{tx, storage}
@@ -84,6 +85,7 @@ func (p *Processor) Execute(
 		t             = p.blk.GetTimestamp()
 		blkUnitPrice  = p.blk.GetUnitPrice()
 		results       = []*Result{}
+		sm            = p.blk.vm.StateManager()
 	)
 	for txData := range p.readyTxs {
 		tx := txData.tx
@@ -94,13 +96,26 @@ func (p *Processor) Execute(
 		}
 		// It is critical we explicitly set the scope before each transaction is
 		// processed
-		ts.SetScope(ctx, tx.StateKeys())
+		ts.SetScope(ctx, tx.StateKeys(sm))
 
 		// Execute tx
 		if err := tx.PreExecute(ctx, ectx, r, ts, t); err != nil {
 			return 0, 0, nil, err
 		}
-		result, err := tx.Execute(ctx, r, ts, t)
+		// Wait to execute transaction until we have the warp result processed.
+		//
+		// TODO: parallel execution will greatly improve performance in the case
+		// that we are waiting for signature verification.
+		var warpVerified bool
+		warpMsg, ok := p.blk.warpMessages[tx.ID()]
+		if ok {
+			select {
+			case warpVerified = <-warpMsg.verifiedChan:
+			case <-ctx.Done():
+				return 0, 0, nil, ctx.Err()
+			}
+		}
+		result, err := tx.Execute(ctx, ectx, r, sm, ts, t, ok && warpVerified)
 		if err != nil {
 			return 0, 0, nil, err
 		}

@@ -41,18 +41,18 @@ func (m *MockAction) EXPECT() *MockActionMockRecorder {
 }
 
 // Execute mocks base method.
-func (m *MockAction) Execute(arg0 context.Context, arg1 Rules, arg2 Database, arg3 int64, arg4 Auth, arg5 ids.ID) (*Result, error) {
+func (m *MockAction) Execute(arg0 context.Context, arg1 Rules, arg2 Database, arg3 int64, arg4 Auth, arg5 ids.ID, arg6 bool) (*Result, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Execute", arg0, arg1, arg2, arg3, arg4, arg5)
+	ret := m.ctrl.Call(m, "Execute", arg0, arg1, arg2, arg3, arg4, arg5, arg6)
 	ret0, _ := ret[0].(*Result)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Execute indicates an expected call of Execute.
-func (mr *MockActionMockRecorder) Execute(arg0, arg1, arg2, arg3, arg4, arg5 interface{}) *gomock.Call {
+func (mr *MockActionMockRecorder) Execute(arg0, arg1, arg2, arg3, arg4, arg5, arg6 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Execute", reflect.TypeOf((*MockAction)(nil).Execute), arg0, arg1, arg2, arg3, arg4, arg5)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Execute", reflect.TypeOf((*MockAction)(nil).Execute), arg0, arg1, arg2, arg3, arg4, arg5, arg6)
 }
 
 // Marshal mocks base method.
@@ -82,17 +82,17 @@ func (mr *MockActionMockRecorder) MaxUnits(arg0 interface{}) *gomock.Call {
 }
 
 // StateKeys mocks base method.
-func (m *MockAction) StateKeys(arg0 Auth) [][]byte {
+func (m *MockAction) StateKeys(arg0 Auth, arg1 ids.ID) [][]byte {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StateKeys", arg0)
+	ret := m.ctrl.Call(m, "StateKeys", arg0, arg1)
 	ret0, _ := ret[0].([][]byte)
 	return ret0
 }
 
 // StateKeys indicates an expected call of StateKeys.
-func (mr *MockActionMockRecorder) StateKeys(arg0 interface{}) *gomock.Call {
+func (mr *MockActionMockRecorder) StateKeys(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StateKeys", reflect.TypeOf((*MockAction)(nil).StateKeys), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StateKeys", reflect.TypeOf((*MockAction)(nil).StateKeys), arg0, arg1)
 }
 
 // ValidRange mocks base method.

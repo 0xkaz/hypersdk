@@ -5,9 +5,12 @@
   Opinionated Framework for Building Hyper-Scalable Blockchains on Avalanche
 </p>
 <p align="center">
+  <a href="https://goreportcard.com/report/github.com/ava-labs/hypersdk"><img src="https://goreportcard.com/badge/github.com/ava-labs/hypersdk" /></a>
   <a href="https://github.com/ava-labs/hypersdk/actions/workflows/unit-tests.yml"><img src="https://github.com/ava-labs/hypersdk/actions/workflows/unit-tests.yml/badge.svg" /></a>
   <a href="https://github.com/ava-labs/hypersdk/actions/workflows/static-analysis.yml"><img src="https://github.com/ava-labs/hypersdk/actions/workflows/static-analysis.yml/badge.svg" /></a>
 </p>
+
+---
 
 The freedom to create your own [Virtual Machine (VM)](https://docs.avax.network/subnets#virtual-machines),
 or blockchain runtime, is one of the most exciting and powerful aspects of building
@@ -105,10 +108,14 @@ happen.
 `hypersdk` transactions must specify the keys they will touch in state (read
 or write) during execution and authentication so that all relevant data can be
 pre-fetched before block execution starts, which ensures all data accessed during
-verification of a block is done so in memory). This restriction also enables
-transactions to be processed in parallel as distinct, ordered transaction sets
-can be trivially formed by looking at the overlap of keys that transactions
-will touch.
+verification of a block is done so in memory). Notably, the keys specified here
+are not keys in a merkle trie (which may be quite volatile) but are instead the
+actual keys used to access data by the storage engine (like your address, which
+is much less volatile and not as cumbersome of a UX barrier).
+
+This restriction also enables transactions to be processed in parallel as distinct,
+ordered transaction sets can be trivially formed by looking at the overlap of keys
+that transactions will touch.
 
 _Parallel transaction execution was originally included in `hypersdk` but
 removed because the overhead of the naïve mechanism used to group transactions
@@ -128,7 +135,7 @@ time of a block when running on powerful hardware.
 ### Account Abstraction
 The `hypersdk` makes no assumptions about how `Actions` (the primitive for
 interactions with any `hyperchain`, as explained below) are verified. Rather,
-`hypervm's` provide the `hypersdk` with a registry of supported `Auth` modules
+`hypervms` provide the `hypersdk` with a registry of supported `Auth` modules
 that can be used to validate each type of transaction. These `Auth` modules can
 perform simple things like signature verification or complex tasks like
 executing a WASM blob.
@@ -150,6 +157,36 @@ mempool more performant (as we no longer need to maintain multiple transactions
 for a single account and ensure they are ordered) and makes the network layer
 more efficient (we can gossip any valid transaction to any node instead of just
 the transactions for each account that can be executed at the moment).
+
+### Avalanche Warp Messaging Support
+`hypersdk` provides support for Avalanche Warp Messaging (AWM) out-of-the-box. AWM enables any
+Avalanche Subnet to send arbitrary messages to any another Avalanche Subnet in just a few
+seconds (or less) without relying on a trusted relayer or bridge (just the validators of the Subnet sending the message).
+You can learn more about AWM and how it works
+[here](https://docs.google.com/presentation/d/1eV4IGMB7qNV7Fc4hp7NplWxK_1cFycwCMhjrcnsE9mU/edit).
+
+<p align="center">
+  <img width="90%" alt="warp" src="assets/warp.png">
+</p>
+
+AWM is a primitive provided by the Avalanche Network used to verify that
+a particular [BLS Multi-Signatures](https://crypto.stanford.edu/~dabo/pubs/papers/BLSmultisig.html)
+is valid and signed by some % of the stake weight of a particular Avalanche
+Subnet (typically the Subnet where the message originated). Specifying when an
+Avalanche Custom VM produces a Warp Message for signing, defining the format
+of Warp Messages sent between Subnets, implementing some mechanism to gather
+individual signatures from validators (to aggregate into a BLS
+Multi-Signature) over this user-defined message, articulating how an imported
+Warp Message from another Subnet is handled on a destination (if the
+destination chooses to even accept the message), and enabling retries in the
+case that a message is dropped or the BLS Multi-Signature expires are just a few of the items
+left to the implementer.
+
+The `hypersdk` handles all of the above items for you except for defining when
+you should emit a Warp Message to send to another Subnet (i.e. what an export looks like on-chain),
+what this Warp Message should look like (i.e. what do you want to send to another Subnet), and
+what you should do if you recieve a Warp Message (i.e. mint assets if you
+receive an import).
 
 ### Easy Functionality Upgrades
 Every object that can appear on-chain (i.e. `Actions` and/or `Auth`) and every chain
@@ -212,11 +249,30 @@ and are stored alongside all other runtime logs. The unification of all of
 these functions with avalanchego means existing avalanchego monitoring tools
 work out of the box on your `hypervm`.
 
-## Example: `indexvm`
-We created the [`indexvm`](https://github.com/ava-labs/indexvm) while
-building the `hypersdk` to test out our design decisions and abstractions.
-We recommend taking a look at this `hypervm` to gain an in-depth understanding
-of how you can build a complex runtime on top of the `hypersdk`.
+## Examples
+### Beginner: `tokenvm`
+We created the [`tokenvm`](./examples/tokenvm) to showcase how to use the
+`hypersdk` in an application most readers are already familiar with, token minting
+and token trading. The `tokenvm` lets anyone create any asset, mint more of
+their asset, modify the metadata of their asset (if they reveal some info), and
+burn their asset. Additionally, there is an embedded on-chain exchange that
+allows anyone to create orders and fill (partial) orders of anyone else. To
+make this example easy to play with, the `tokenvm` also bundles a powerful CLI
+tool and serves RPC requests for trades out of an in-memory order book it
+maintains by syncing blocks. If you are interested in the intersection of
+exchanges and blockchains, it is definitely worth a read (the logic for filling
+orders is < 100 lines of code!).
+
+To ensure the `hypersdk` remains reliable as we optimize and evolve the codebase,
+we also run E2E tests in the `tokenvm` on each PR to the `hypersdk` core modules.
+
+### Expert: `indexvm`
+The [`indexvm`](https://github.com/ava-labs/indexvm) is much more complex than
+the `tokenvm` (more elaborate mechanisms and a new use case you may not be
+familiar with). It was built during the design of the `hypersdk` to test out the
+limits of the abstractions for building complex on-chain mechanisms. We recommend
+taking a look at this `hypervm` once you already have familiarity with the `hypersdk` to gain an
+even deeper understanding of how you can build a complex runtime on top of the `hypersdk`.
 
 The `indexvm` is dedicated to increasing the usefulness of the world's
 content-addressable data (like IPFS) by enabling anyone to "index it" by
@@ -238,20 +294,22 @@ a small part in this movement by making it easier for anyone to generate
 world-class recommendations for anyone on the internet, even if you've never
 interacted with them before.
 
-We'll use this example to explain how to use the `hypersdk` below.
+We'll use both of these `hypervms` to explain how to use the `hypersdk` below.
 
 ## How It Works
 To use the `hypersdk`, you must import it into your own `hypervm` and implement the
 required interfaces. Below, we'll cover some of the ones that your
 `hypervm` must implement.
 
+> _Note: `hypersdk` requires a minimum Go version of 1.20_
+
 ### Controller
 ```golang
 type Controller interface {
 	Initialize(
-		inner *VM,
+		inner *VM, // hypersdk VM
 		snowCtx *snow.Context,
-		gatherer metrics.MultiGatherer,
+		gatherer ametrics.MultiGatherer,
 		genesisBytes []byte,
 		upgradeBytes []byte,
 		configBytes []byte,
@@ -260,7 +318,7 @@ type Controller interface {
 		genesis Genesis,
 		builder builder.Builder,
 		gossiper gossiper.Gossiper,
-		blockDB KVDatabase,
+		vmDB database.Database,
 		stateDB database.Database,
 		handler Handlers,
 		actionRegistry chain.ActionRegistry,
@@ -269,9 +327,12 @@ type Controller interface {
 	)
 
 	Rules(t int64) chain.Rules
+	StateManager() chain.StateManager
 
 	Accepted(ctx context.Context, blk *chain.StatelessBlock) error
 	Rejected(ctx context.Context, blk *chain.StatelessBlock) error
+
+	Shutdown(context.Context) error
 }
 ```
 
@@ -281,8 +342,23 @@ structures utilized by the `hypersdk` and handles both `Accepted` and
 `Gossiper`, `Handlers`, and `Database` packages so this is typically a lot of
 boilerplate code.
 
-You can view what this looks like in the `indexvm` by clicking this
-[link](https://github.com/ava-labs/indexvm/blob/main/controller/controller.go).
+You can view what this looks like in the `tokenvm` by clicking this
+[link](./examples/tokenvm/controller/controller.go).
+
+#### Registry
+```golang
+ActionRegistry *codec.TypeParser[Action, *warp.Message, bool]
+AuthRegistry   *codec.TypeParser[Auth, *warp.Message, bool]
+```
+
+The `ActionRegistry` and `AuthRegistry` are inform the `hypersdk` how to
+marshal/unmarshal bytes on-the-wire. If the `Controller` did not provide these,
+the `hypersdk` would not know how to extract anything from the bytes it was
+provded by the Avalanche Consensus Engine.
+
+_In the future, we will provide an option to automatically marshal/unmarshal
+objects if an `ActionRegistry` and/or `AuthRegistry` is not provided using
+a default codec._
 
 ### Genesis
 ```golang
@@ -298,8 +374,8 @@ start of the network (fee price, enabled txs, etc.). The serialized genesis of
 any `hyperchain` is persisted on the P-Chain for anyone to see when the network
 is created.
 
-You can view what this looks like in the `indexvm` by clicking this
-[link](https://github.com/ava-labs/indexvm/blob/main/genesis/genesis.go).
+You can view what this looks like in the `tokenvm` by clicking this
+[link](./examples/tokenvm/genesis/genesis.go).
 
 ### Action
 ```golang
@@ -307,8 +383,16 @@ type Action interface {
 	MaxUnits(Rules) uint64
 	ValidRange(Rules) (start int64, end int64)
 
-	StateKeys(Auth) [][]byte
-	Execute(ctx context.Context, r Rules, db Database, timestamp int64, auth Auth, txID ids.ID) (result *Result, err error)
+	StateKeys(auth Auth, txID ids.ID) [][]byte
+	Execute(
+		ctx context.Context,
+		r Rules,
+		db Database,
+		timestamp int64,
+		auth Auth,
+		txID ids.ID,
+		warpVerified bool,
+	) (result *Result, err error)
 
 	Marshal(p *codec.Packer)
 }
@@ -319,8 +403,24 @@ the blockchain runtime. Specifically, they are "user-defined" element of
 any `hypersdk` transaction that is processed by all participants of any
 `hyperchain`.
 
-You can view what a simple transfer `Action` looks like [here](https://github.com/ava-labs/indexvm/blob/main/actions/transfer.go)
-and what a more complex "index" `Action` looks like [here](https://github.com/ava-labs/indexvm/blob/main/actions/index.go).
+You can view what a simple transfer `Action` looks like [here](./examples/tokenvm/actions/transfer.go)
+and what a more complex "fill order" `Action` looks like [here](./examples/tokenvm/actions/fill_order.go).
+
+#### Result
+```golang
+type Result struct {
+	Success     bool
+	Units       uint64
+	Output      []byte
+	WarpMessage *warp.UnsignedMessage
+}
+```
+
+`Actions` emit a `Result` at the end of their execution. This `Result`
+indicates if the execution was a `Success` (if not, all effects are rolled
+back), how many `Units` were used (failed execution may not use all units an
+`Action` requested), an `Output` (arbitrary bytes specific to the `hypervm`),
+and optionally a `WarpMessage` (which Subnet Validators will sign).
 
 ### Auth
 ```golang
@@ -366,10 +466,8 @@ that an account owner can call to perform any ACL modifications.
 ### Rules
 ```golang
 type Rules interface {
-	GetChainID() ids.ID
-
 	GetMaxBlockTxs() int
-	GetMaxBlockUnits() uint64
+	GetMaxBlockUnits() uint64 // should ensure can't get above block max size
 
 	GetValidityWindow() int64
 	GetBaseUnits() uint64
@@ -381,6 +479,10 @@ type Rules interface {
 	GetMinBlockCost() uint64
 	GetBlockCostChangeDenominator() uint64
 	GetWindowTargetBlocks() uint64
+
+	GetWarpConfig(sourceChainID ids.ID) (bool, uint64, uint64)
+	GetWarpBaseFee() uint64
+	GetWarpFeePerSigner() uint64
 
 	FetchCustom(string) (any, bool)
 }
@@ -397,6 +499,87 @@ You can view what this looks like in the `indexvm` by clicking
 case of the `indexvm`, the custom rule support is used to set the cost for
 adding anything to state (which is a very `hypervm-specific` value).
 
+### Avalanche Warp Messaging
+To add AWM support to a `hypervm`, an implementer first specifies whether a
+particular `Action`/`Auth` item expects a `*warp.Message` when registering
+them with their corresponding registry (`false` if no expected and `true` if
+so):
+```golang
+ActionRegistry.Register(&actions.Transfer{}, actions.UnmarshalTransfer, false)
+ActionRegistry.Register(&actions.ImportAsset{}, actions.UnmarshalImportAsset, true)
+```
+
+You can view what this looks like in the `tokenvm` by clicking
+[here](./examples/tokenvm/controller/registry.go). The `hypersdk` uses this
+boolean to enforce the existence/non-existence of a `*warp.Message` on the
+`chain.Transaction` that wraps the `Action` (marking a block as invalid if there is
+something unexpected).
+
+`Actions` can use the provided `*warp.Message` in their registered unmarshaler
+(in this case, the provided `*warp.Message` is parsed into a format specified
+by the `tokenvm`):
+```golang
+func UnmarshalImportAsset(p *codec.Packer, wm *warp.Message) (chain.Action, error) {
+	var (
+		imp ImportAsset
+		err error
+	)
+	imp.Fill = p.UnpackBool()
+	if err := p.Err(); err != nil {
+		return nil, err
+	}
+	imp.warpMessage = wm
+	imp.warpTransfer, err = UnmarshalWarpTransfer(imp.warpMessage.Payload)
+	if err != nil {
+		return nil, err
+	}
+	// Ensure we can fill the swap if it exists
+	if imp.Fill && imp.warpTransfer.SwapIn == 0 {
+		return nil, ErrNoSwapToFill
+	}
+	return &imp, nil
+}
+```
+
+This `WarpTransfer` object looks like:
+```golang
+type WarpTransfer struct {
+	To    crypto.PublicKey `json:"to"`
+	Asset ids.ID           `json:"asset"`
+	Value uint64           `json:"value"`
+
+	// Return is set to true when a warp message is sending funds back to the
+	// chain where they were created.
+	Return bool `json:"return"`
+
+	// Reward is the amount of [Asset] to send the [Actor] that submits this
+	// transaction.
+	Reward uint64 `json:"reward"`
+
+	// SwapIn is the amount of [Asset] we are willing to swap for [AssetOut].
+	SwapIn uint64 `json:"swapIn"`
+	// AssetOut is the asset we are seeking to get for [SwapIn].
+	AssetOut ids.ID `json:"assetOut"`
+	// SwapOut is the amount of [AssetOut] we are seeking.
+	SwapOut uint64 `json:"swapOut"`
+	// SwapExpiry is the unix timestamp at which the swap becomes invalid (and
+	// the message can be processed without a swap.
+	SwapExpiry int64 `json:"swapExpiry"`
+
+	// TxID is the transaction that created this message. This is used to ensure
+	// there is WarpID uniqueness.
+	TxID ids.ID `json:"txID"`
+}
+```
+
+You can view what the import `Action` associated with the above examples looks like
+[here](./examples/tokenvm/actions/import_asset.go)
+
+_As mentioned above, it is up to the `hypervm` to implement a message format
+that it can understand (so that it can parse inbound AWM messages). In the
+future, we expect that there will be common message definitions that will be
+compatible with most `hypervms` (and maintained in the `hypersdk`)._
+
 ## Future Work
 _If you want to take the lead on any of these items, please
 [start a discussion](https://github.com/ava-labs/hypersdk/discussions) or reach
@@ -405,10 +588,6 @@ out on the Avalanche Discord._
 * Use pre-specified state keys to process transactions in parallel (txs with no
   overlap can be processed at the same time, create conflict sets on-the-fly
   instead of before execution)
-* Perform E2E tests and publish nightly performance benchmarks using a simple
-  hypervm that just performs simple transfers (`dummyvm`)
-* Add support for Avalanche Warp Messaging (AWM) so any deployed hypervms
-  (hyperchains) can communicate with each other ([see ava-labs/xsvm](https://github.com/ava-labs/xsvm))
 * Add a WASM runtime module to allow developers to embed smart contract
   functionality in their hypervms
 * Overhaul streaming RPC (properly heartbeat and close connections)
@@ -429,3 +608,13 @@ out on the Avalanche Discord._
 * Implement support for S3 and PostgreSQL storage backends
 * Provide optional auto-serialization/deserialization of `Actions` and `Auth`
   if only certain types are used in their definition
+* Add a module that could be used to track the location of various pieces
+  of data across a network ([see consistent
+  hasher](https://github.com/ava-labs/avalanchego/tree/master/utils/hashing/consistent))
+  of `hypervm` participants (even better if this is made abstract to any implementer
+  such that they can just register and request data from it and it is automatically
+  handled by the network layer). This module should make it possible for an
+  operator to use a single backend (like S3) to power storage fro multiple
+  hosts.
+* Only set `export CGO_CFLAGS="-O -D__BLST_PORTABLE__"` when running on
+  MacOS/Windows (will make Linux much more performant)
