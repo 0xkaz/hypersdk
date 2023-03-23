@@ -1,4 +1,5 @@
-_NAME := $(notdir $(CURDIR))
+# _NAME := $(notdir $(CURDIR))
+_NAME := weavedbvm
 _DATE := $(shell date +%Y-%m-%d-%H-%M-%S)
 
 
