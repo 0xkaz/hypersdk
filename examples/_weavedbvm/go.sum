@@ -69,8 +69,14 @@ github.com/ava-labs/avalanche-network-runner v1.3.10-0.20230315100749-fc888ba064
 github.com/ava-labs/avalanche-network-runner v1.3.10-0.20230315100749-fc888ba0646f/go.mod h1:/mKIh+RWwE3jN9xkRu0gw8oL0e+c0XtBxEe88OhJqMc=
 github.com/ava-labs/avalanchego v1.9.12 h1:bDDNfJeeyLHviIQV2jiQUTHbMB0m7+oDreIvhWjkePQ=
 github.com/ava-labs/avalanchego v1.9.12/go.mod h1:Unm7ruhAvLSRP+7gIfwyHNf+wEehWLsFhY9yp10nDbw=
+github.com/ava-labs/avalanchego v1.9.14 h1:pMB3yLdBelSce+ye2sVq2mBTTAHluTOX/TDPt5HxNfs=
+github.com/ava-labs/avalanchego v1.9.14/go.mod h1:Unm7ruhAvLSRP+7gIfwyHNf+wEehWLsFhY9yp10nDbw=
 github.com/ava-labs/coreth v0.11.9-rc.0 h1:7oK5DWtvDEMKEaduw/34r5kdwUssRsFszCl1FFUvvPc=
 github.com/ava-labs/coreth v0.11.9-rc.0/go.mod h1:y41I9mWK04s8oObvQeYjkdoidtPhkPqV8prRPN6zrd4=
+github.com/ava-labs/hypersdk v0.0.1 h1:lVNJVzj1PsP8QzNToDb+jN+A2+lEHCgCHjnIO1OnFd8=
+github.com/ava-labs/hypersdk v0.0.1/go.mod h1:RofBf7rbnRV6phWDHaLpwNabvGq31h79R0BTfpIv2xk=
+github.com/ava-labs/hypersdk/examples/tokenvm v0.0.0-20230322065048-bed94e4df6a2 h1:1IVAL1eaYt51uzFYKVsyI5jsh1zvRgOdvxgbPPvVKhk=
+github.com/ava-labs/hypersdk/examples/tokenvm v0.0.0-20230322065048-bed94e4df6a2/go.mod h1:jqP+ny7ipWVUodPETDbvVRF2gHyN7Y+rVrWiwOJ5XL0=
 github.com/aymerick/raymond v2.0.3-0.20180322193309-b565731e1464+incompatible/go.mod h1:osfaiScAUVup+UC9Nfq76eWqDhXlp+4UYaA8uhTBO6g=
 github.com/benbjohnson/clock v1.3.0 h1:ip6w0uFQkncKQ979AypyG0ER7mqUSBdKLOgAle/AT8A=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
