@@ -143,4 +143,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/ava-labs/hypersdk => ../../
+// replace github.com/ava-labs/hypersdk => ../../
