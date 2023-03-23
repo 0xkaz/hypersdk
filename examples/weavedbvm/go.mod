@@ -1,4 +1,4 @@
-module github.com/ava-labs/hypersdk/examples/tokenvm
+module github.com/ava-labs/hypersdk/examples/weavedbvm
 
 go 1.20
 
@@ -21,6 +21,7 @@ require (
 	github.com/NYTimes/gziphandler v1.1.1 // indirect
 	github.com/VictoriaMetrics/fastcache v1.10.0 // indirect
 	github.com/ava-labs/coreth v0.11.9-rc.0 // indirect
+	github.com/ava-labs/hypersdk/examples/tokenvm v0.0.0-20230322065048-bed94e4df6a2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/btcsuite/btcd/btcec/v2 v2.3.2 // indirect
 	github.com/btcsuite/btcd/btcutil v1.1.3 // indirect
