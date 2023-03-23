@@ -24,9 +24,9 @@ jobs:
       - name: display go version
         run: go version
         
-      - name: go build
-        run: go build -v ./...
-        working-directory: ./examples/tokenvm
+      # - name: go build
+      #   run: go build -v ./...
+      #   working-directory: ./examples/tokenvm
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -45,20 +45,20 @@ jobs:
         run: docker tag  tokenvm:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/tokenvm:`date +%Y-%m-%d-%H-%I-%S`-$GITHUB_SHA-${GITHUB_REF##*/}
         working-directory: ./examples/tokenvm
 
-      # # AWS Credentials
-      # - name: create .aws
-      #   run: mkdir ~/.aws
-      # - name: echo1
-      #   run: echo '[default]' > ~/.aws/credentials
-      # - name: echo2
-      #   run: echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
-      # - name: echo3
-      #   run: echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+      # AWS Credentials
+      - name: create .aws
+        run: mkdir ~/.aws
+      - name: echo1
+        run: echo '[default]' > ~/.aws/credentials
+      - name: echo2
+        run: echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+      - name: echo3
+        run: echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
 
-      # - name: echo4
-      #   run: echo '[default]' > ~/.aws/config
-      # - name: echo5
-      #   run: echo "region = ${{ secrets.AWS_MAIN_REGION }}" >> ~/.aws/config
+      - name: echo4
+        run: echo '[default]' > ~/.aws/config
+      - name: echo5
+        run: echo "region = ${{ secrets.AWS_MAIN_REGION }}" >> ~/.aws/config
 
       # # DOCKER PUSH
       # - name: docker login
