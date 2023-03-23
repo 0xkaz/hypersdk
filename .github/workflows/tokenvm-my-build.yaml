@@ -60,17 +60,20 @@ jobs:
       - name: echo5
         run: echo "region = ${{ secrets.AWS_MAIN_REGION }}" >> ~/.aws/config
 
-      # # DOCKER PUSH
-      # - name: docker login
-      #   run: aws ecr get-login-password --region ${{ secrets.AWS_MAIN_REGION }} |  docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION}}.amazonaws.com
-      # - name: docker push
-      #   run: docker push  --all-tags ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/tokenvm
+      # DOCKER PUSH
+      - name: docker login
+        run: aws ecr get-login-password --region ${{ secrets.AWS_MAIN_REGION }} |  docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION}}.amazonaws.com
+      - name: docker push
+        run: docker push  --all-tags ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/tokenvm
 
       # - name: delete old docker image
       #   run: ./scripts/delete_old_docker_images.rb tokenvm eu-west-1
       #   working-directory: ./examples/tokenvm
 
 
+      - name: delete old docker image
+        run: ./scripts/delete_old_docker_images.rb tokenvm ${{ secrets.AWS_MAIN_REGION }}
+        working-directory: ./examples/weavedbvm
 
 
 
