@@ -74,24 +74,24 @@ jobs:
 
 
 
-      # - name: Send custom JSON data to Slack workflow
-      #   id: slack
-      #   uses: slackapi/slack-github-action@v1.23.0
-      #   with:
-      #     # For posting a rich message using Block Kit
-      #     payload: |
-      #       {
-      #         "text": "GitHub Action tokenvm Docker Build/Push result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nDocker Repository URL: tokenvm \nhttps://${{ secrets.AWS_MAIN_REGION }}.console.aws.amazon.com/ecr/repositories/private/${{ secrets.AWS_ACCOUNT_ID }}/tokenvm?region=${{ secrets.AWS_MAIN_REGION }}\n",
-      #         "blocks": [
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "mrkdwn",
-      #               "text": "GitHub Action tokenvm Docker Build/Push result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nDocker Repository URL: tokenvm \nhttps://${{ secrets.AWS_MAIN_REGION }}.console.aws.amazon.com/ecr/repositories/private/${{ secrets.AWS_ACCOUNT_ID }}/tokenvm?region=${{ secrets.AWS_MAIN_REGION }}\n"
-      #             }
-      #           }
-      #         ]
-      #       }
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - name: Send custom JSON data to Slack workflow
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          # For posting a rich message using Block Kit
+          payload: |
+            {
+              "text": "GitHub Action tokenvm Docker Build/Push result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nDocker Repository URL: tokenvm \nhttps://${{ secrets.AWS_MAIN_REGION }}.console.aws.amazon.com/ecr/repositories/private/${{ secrets.AWS_ACCOUNT_ID }}/tokenvm?region=${{ secrets.AWS_MAIN_REGION }}\n",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "GitHub Action tokenvm Docker Build/Push result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nDocker Repository URL: tokenvm \nhttps://${{ secrets.AWS_MAIN_REGION }}.console.aws.amazon.com/ecr/repositories/private/${{ secrets.AWS_ACCOUNT_ID }}/tokenvm?region=${{ secrets.AWS_MAIN_REGION }}\n"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
