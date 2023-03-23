@@ -3,6 +3,11 @@ FROM golang:1.19-alpine
 WORKDIR /myvm
 COPY . .
 
+RUN apk update
+RUN apk upgrade
+RUN apk add vim
+RUN apk add bash
+
 #FROM alpine:latest
 #FROM golang:1.19-alpine as builder
 
