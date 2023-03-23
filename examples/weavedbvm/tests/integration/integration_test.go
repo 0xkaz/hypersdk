@@ -40,13 +40,13 @@ import (
 	hutils "github.com/ava-labs/hypersdk/utils"
 	"github.com/ava-labs/hypersdk/vm"
 
-	"github.com/ava-labs/hypersdk/examples/tokenvm/actions"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/auth"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/client"
-	tconsts "github.com/ava-labs/hypersdk/examples/tokenvm/consts"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/controller"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/genesis"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/utils"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/actions"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/auth"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/client"
+	tconsts "github.com/ava-labs/hypersdk/examples/weavedbvm/consts"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/controller"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/genesis"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/utils"
 )
 
 const transferTxFee = 400 /* base fee */ + 72 /* transfer fee */

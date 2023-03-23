@@ -13,9 +13,9 @@ import (
 	"github.com/ava-labs/hypersdk/trace"
 	"github.com/ava-labs/hypersdk/vm"
 
-	"github.com/ava-labs/hypersdk/examples/tokenvm/consts"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/utils"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/version"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/consts"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/utils"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/version"
 )
 
 var _ vm.Config = (*Config)(nil)

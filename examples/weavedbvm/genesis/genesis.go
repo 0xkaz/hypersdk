@@ -14,9 +14,9 @@ import (
 
 	"github.com/ava-labs/hypersdk/chain"
 	"github.com/ava-labs/hypersdk/crypto"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/consts"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/storage"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/utils"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/consts"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/storage"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/utils"
 	"github.com/ava-labs/hypersdk/vm"
 )
 

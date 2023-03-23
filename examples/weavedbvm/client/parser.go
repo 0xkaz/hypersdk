@@ -9,9 +9,9 @@ import (
 	"github.com/ava-labs/avalanchego/ids"
 	"github.com/ava-labs/hypersdk/chain"
 
-	"github.com/ava-labs/hypersdk/examples/tokenvm/consts"
-	_ "github.com/ava-labs/hypersdk/examples/tokenvm/controller" // ensure registry populated
-	"github.com/ava-labs/hypersdk/examples/tokenvm/genesis"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/consts"
+	_ "github.com/ava-labs/hypersdk/examples/weavedbvm/controller" // ensure registry populated
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/genesis"
 )
 
 var _ chain.Parser = (*Parser)(nil)

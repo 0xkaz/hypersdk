@@ -5,7 +5,7 @@ package controller
 
 import (
 	"github.com/ava-labs/avalanchego/ids"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/storage"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/storage"
 )
 
 type StateManager struct{}

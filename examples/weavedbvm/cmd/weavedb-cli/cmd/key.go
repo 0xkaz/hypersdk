@@ -12,8 +12,8 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 
-	"github.com/ava-labs/hypersdk/examples/tokenvm/client"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/utils"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/client"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/utils"
 )
 
 var keyCmd = &cobra.Command{

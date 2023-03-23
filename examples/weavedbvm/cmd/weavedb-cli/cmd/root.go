@@ -1,7 +1,7 @@
 // Copyright (C) 2023, Ava Labs, Inc. All rights reserved.
 // See the file LICENSE for licensing terms.
 
-// "token-cli" implements tokenvm client operation interface.
+// "weavedb-cli" implements weavedbvm client operation interface.
 package cmd
 
 import (
@@ -16,7 +16,7 @@ import (
 const (
 	requestTimeout  = 30 * time.Second
 	fsModeWrite     = 0o600
-	defaultDatabase = ".token-cli"
+	defaultDatabase = ".weavedb-cli"
 	defaultGenesis  = "genesis.json"
 )
 
@@ -31,9 +31,9 @@ var (
 	maxTxBacklog    int
 
 	rootCmd = &cobra.Command{
-		Use:        "token-cli",
-		Short:      "TokenVM CLI",
-		SuggestFor: []string{"token-cli", "tokencli"},
+		Use:        "weavedb-cli",
+		Short:      "WeaveDBVM CLI",
+		SuggestFor: []string{"weavedb-cli", "weavedbcli"},
 	}
 )
 

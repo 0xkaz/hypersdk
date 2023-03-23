@@ -10,9 +10,9 @@ import (
 	"github.com/ava-labs/avalanchego/ids"
 	"github.com/ava-labs/hypersdk/vm"
 
-	"github.com/ava-labs/hypersdk/examples/tokenvm/genesis"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/storage"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/utils"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/genesis"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/storage"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/utils"
 )
 
 const (

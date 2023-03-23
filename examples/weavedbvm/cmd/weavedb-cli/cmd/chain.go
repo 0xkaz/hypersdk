@@ -19,11 +19,11 @@ import (
 	"github.com/ava-labs/hypersdk/vm"
 	"github.com/spf13/cobra"
 
-	"github.com/ava-labs/hypersdk/examples/tokenvm/actions"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/auth"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/client"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/consts"
-	tutils "github.com/ava-labs/hypersdk/examples/tokenvm/utils"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/actions"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/auth"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/client"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/consts"
+	tutils "github.com/ava-labs/hypersdk/examples/weavedbvm/utils"
 )
 
 var chainCmd = &cobra.Command{

@@ -23,8 +23,8 @@ name="tHBYNu8ikqo4MWMHehC9iKB9mR5tB3DWzbkYmTfe9buWQ5GZ8"
 # Build tokenvm, which is run as a subprocess
 mkdir -p ./build
 
-echo "Building tokenvm in ./build/$name"
-go build -o ./build/$name ./cmd/tokenvm
+echo "Building weavedbvm in ./build/$name"
+go build -o ./build/$name ./cmd/weavedbvm
 
-echo "Building token-cli in ./build/token-cli"
-go build -o ./build/token-cli ./cmd/token-cli
+echo "Building weavedb-cli in ./build/weavedb-cli"
+go build -o ./build/weavedb-cli ./cmd/weavedb-cli

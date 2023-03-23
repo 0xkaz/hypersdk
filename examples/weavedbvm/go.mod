@@ -1,4 +1,4 @@
-module github.com/ava-labs/hypersdk/examples/tokenvm
+module github.com/ava-labs/hypersdk/examples/weavedbvm
 
 go 1.20
 
@@ -142,4 +142,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-// replace github.com/ava-labs/hypersdk => ../../
+replace github.com/ava-labs/hypersdk => ../../

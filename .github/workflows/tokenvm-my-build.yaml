@@ -26,7 +26,7 @@ jobs:
         
       # - name: go build
       #   run: go build -v ./...
-      #   working-directory: ./examples/tokenvm
+      #   working-directory: ./examples/weavedbvm
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -35,15 +35,15 @@ jobs:
         run: echo ${GITHUB_REF##*/}
 
       - name: docker build
-        run: docker build  --platform linux/amd64  -t tokenvm .
-        working-directory: ./examples/tokenvm
+        run: docker build  --platform linux/amd64  -t weavedbvm .
+        # working-directory: ./examples/weavedbvm
 
       - name: docker tag1
-        run: docker tag  tokenvm:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/tokenvm:latest
-        working-directory: ./examples/tokenvm
+        run: docker tag  weavedbvm:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/weavedbvm:latest
+        # working-directory: ./examples/weavedbvm
       - name: docker tag2
-        run: docker tag  tokenvm:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/tokenvm:`date +%Y-%m-%d-%H-%I-%S`-$GITHUB_SHA-${GITHUB_REF##*/}
-        working-directory: ./examples/tokenvm
+        run: docker tag  weavedbvm:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/weavedbvm:`date +%Y-%m-%d-%H-%I-%S`-$GITHUB_SHA-${GITHUB_REF##*/}
+        # working-directory: ./examples/weavedbvm
 
       # AWS Credentials
       - name: create .aws
@@ -64,15 +64,15 @@ jobs:
       - name: docker login
         run: aws ecr get-login-password --region ${{ secrets.AWS_MAIN_REGION }} |  docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION}}.amazonaws.com
       - name: docker push
-        run: docker push  --all-tags ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/tokenvm
+        run: docker push  --all-tags ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/weavedbvm
 
       # - name: delete old docker image
-      #   run: ./scripts/delete_old_docker_images.rb tokenvm eu-west-1
-      #   working-directory: ./examples/tokenvm
+      #   run: ./scripts/delete_old_docker_images.rb weavedbvm eu-west-1
+      #   working-directory: ./examples/weavedbvm
 
 
       - name: delete old docker image
-        run: ./scripts/delete_old_docker_images.rb tokenvm ${{ secrets.AWS_MAIN_REGION }}
+        run: ./scripts/delete_old_docker_images.rb weavedbvm ${{ secrets.AWS_MAIN_REGION }}
         working-directory: ./examples/weavedbvm
 
 
@@ -84,13 +84,13 @@ jobs:
           # For posting a rich message using Block Kit
           payload: |
             {
-              "text": "GitHub Action tokenvm Docker Build/Push result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nDocker Repository URL: tokenvm \nhttps://${{ secrets.AWS_MAIN_REGION }}.console.aws.amazon.com/ecr/repositories/private/${{ secrets.AWS_ACCOUNT_ID }}/tokenvm?region=${{ secrets.AWS_MAIN_REGION }}\n",
+              "text": "GitHub Action weavedbvm Docker Build/Push result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nDocker Repository URL: weavedbvm \nhttps://${{ secrets.AWS_MAIN_REGION }}.console.aws.amazon.com/ecr/repositories/private/${{ secrets.AWS_ACCOUNT_ID }}/weavedbvm?region=${{ secrets.AWS_MAIN_REGION }}\n",
               "blocks": [
                 {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "GitHub Action tokenvm Docker Build/Push result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nDocker Repository URL: tokenvm \nhttps://${{ secrets.AWS_MAIN_REGION }}.console.aws.amazon.com/ecr/repositories/private/${{ secrets.AWS_ACCOUNT_ID }}/tokenvm?region=${{ secrets.AWS_MAIN_REGION }}\n"
+                    "text": "GitHub Action weavedbvm Docker Build/Push result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nDocker Repository URL: weavedbvm \nhttps://${{ secrets.AWS_MAIN_REGION }}.console.aws.amazon.com/ecr/repositories/private/${{ secrets.AWS_ACCOUNT_ID }}/weavedbvm?region=${{ secrets.AWS_MAIN_REGION }}\n"
                   }
                 }
               ]

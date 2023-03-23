@@ -19,14 +19,14 @@ import (
 	"github.com/ava-labs/hypersdk/vm"
 	"go.uber.org/zap"
 
-	"github.com/ava-labs/hypersdk/examples/tokenvm/actions"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/auth"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/config"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/consts"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/genesis"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/storage"
-	tutils "github.com/ava-labs/hypersdk/examples/tokenvm/utils"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/version"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/actions"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/auth"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/config"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/consts"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/genesis"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/storage"
+	tutils "github.com/ava-labs/hypersdk/examples/weavedbvm/utils"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/version"
 )
 
 var _ vm.Controller = (*Controller)(nil)

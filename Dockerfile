@@ -19,6 +19,7 @@ RUN apk add bash
 # RUN git clone https://github.com/ava-labs/avalanchego.git
 
 # RUN git checkout v${VERSION}
+WORKDIR /myvm/examples/weavedbvm
 
 RUN ./scripts/build.sh 
 
@@ -42,4 +43,5 @@ RUN ./scripts/build.sh
 EXPOSE 12352
 EXPOSE 12353
 
-CMD ["/bin/sh", "/myvm/scripts/run.sh"]
+# CMD ["/bin/sh", "/myvm/examples/weavedbvm/scripts/run.sh"]
+CMD ["/bin/bash", "/myvm/examples/weavedbvm/scripts/run.sh"]

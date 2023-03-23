@@ -10,9 +10,9 @@ import (
 	"github.com/ava-labs/avalanchego/ids"
 	"github.com/ava-labs/hypersdk/client"
 
-	"github.com/ava-labs/hypersdk/examples/tokenvm/consts"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/controller"
-	"github.com/ava-labs/hypersdk/examples/tokenvm/genesis"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/consts"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/controller"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/genesis"
 )
 
 type Client struct {
