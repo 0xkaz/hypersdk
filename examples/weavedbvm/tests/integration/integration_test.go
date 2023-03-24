@@ -69,7 +69,7 @@ func init() {
 
 func TestIntegration(t *testing.T) {
 	gomega.RegisterFailHandler(ginkgo.Fail)
-	ginkgo.RunSpecs(t, "tokenvm integration test suites")
+	ginkgo.RunSpecs(t, "weavedbvm integration test suites")
 }
 
 var (

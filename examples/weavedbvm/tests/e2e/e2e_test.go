@@ -16,7 +16,7 @@ import (
 	"github.com/ava-labs/avalanchego/utils/logging"
 	"github.com/ava-labs/avalanchego/vms/platformvm/warp"
 	"github.com/ava-labs/hypersdk/crypto"
-	"github.com/ava-labs/hypersdk/examples/tokweavedbvmenvm/actions"
+	"github.com/ava-labs/hypersdk/examples/weavedbvm/actions"
 	"github.com/ava-labs/hypersdk/examples/weavedbvm/auth"
 	"github.com/ava-labs/hypersdk/examples/weavedbvm/client"
 	"github.com/ava-labs/hypersdk/examples/weavedbvm/consts"
@@ -37,7 +37,7 @@ const (
 
 func TestE2e(t *testing.T) {
 	gomega.RegisterFailHandler(ginkgo.Fail)
-	ginkgo.RunSpecs(t, "tokenvm e2e test suites")
+	ginkgo.RunSpecs(t, "weavedbvm e2e test suites")
 }
 
 var (

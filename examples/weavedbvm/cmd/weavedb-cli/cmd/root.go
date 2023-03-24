@@ -32,7 +32,7 @@ var (
 
 	rootCmd = &cobra.Command{
 		Use:        "weavedb-cli",
-		Short:      "WeaveDBVM CLI",
+		Short:      "WeaveDB CLI",
 		SuggestFor: []string{"weavedb-cli", "weavedbcli"},
 	}
 )

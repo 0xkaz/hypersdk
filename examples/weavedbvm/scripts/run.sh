@@ -67,7 +67,7 @@ fi
 ############################
 
 ############################
-echo "building tokenvm"
+echo "building weavedbvm"
 
 # delete previous (if exists)
 rm -f /tmp/avalanchego-v${VERSION}/plugins/tHBYNu8ikqo4MWMHehC9iKB9mR5tB3DWzbkYmTfe9buWQ5GZ8
@@ -75,10 +75,10 @@ rm -f /tmp/avalanchego-v${VERSION}/plugins/tHBYNu8ikqo4MWMHehC9iKB9mR5tB3DWzbkYm
 # rebuild with latest code
 go build \
 -o /tmp/avalanchego-v${VERSION}/plugins/tHBYNu8ikqo4MWMHehC9iKB9mR5tB3DWzbkYmTfe9buWQ5GZ8 \
-./cmd/tokenvm
+./cmd/weavedbvm
 
-echo "building token-cli"
-go build -v -o /tmp/token-cli ./cmd/token-cli
+echo "building weavedb-cli"
+go build -v -o /tmp/weavedb-cli ./cmd/weavedb-cli
 
 # log everything in the avalanchego directory
 find /tmp/avalanchego-v${VERSION}
@@ -96,13 +96,13 @@ EOF
 GENESIS_PATH=$2
 if [[ -z "${GENESIS_PATH}" ]]; then
   echo "creating VM genesis file with allocations"
-  rm -f /tmp/tokenvm.genesis
-  /tmp/token-cli genesis generate /tmp/allocations.json \
-  --genesis-file /tmp/tokenvm.genesis
+  rm -f /tmp/weavedbvm.genesis
+  /tmp/weavedb-cli genesis generate /tmp/allocations.json \
+  --genesis-file /tmp/weavedbvm.genesis
 else
   echo "copying custom genesis file"
-  rm -f /tmp/tokenvm.genesis
-  cp ${GENESIS_PATH} /tmp/tokenvm.genesis
+  rm -f /tmp/weavedbvm.genesis
+  cp ${GENESIS_PATH} /tmp/weavedbvm.genesis
 fi
 
 ############################
@@ -110,8 +110,8 @@ fi
 ############################
 
 echo "creating vm config"
-rm -f /tmp/tokenvm.config
-cat <<EOF > /tmp/tokenvm.config
+rm -f /tmp/weavedbvm.config
+cat <<EOF > /tmp/weavedbvm.config
 {
   "mempoolSize": 10000000,
   "mempoolPayerSize": 10000000,
@@ -129,8 +129,8 @@ EOF
 ############################
 
 echo "creating subnet config"
-rm -f /tmp/tokenvm.subnet
-cat <<EOF > /tmp/tokenvm.subnet
+rm -f /tmp/weavedbvm.subnet
+cat <<EOF > /tmp/weavedbvm.subnet
 {
   "proposerMinBlockDelay":100000000
 }
@@ -212,9 +212,9 @@ echo "running e2e tests"
 --network-runner-grpc-gateway-endpoint="0.0.0.0:12353" \
 --avalanchego-path=${AVALANCHEGO_PATH} \
 --avalanchego-plugin-dir=${AVALANCHEGO_PLUGIN_DIR} \
---vm-genesis-path=/tmp/tokenvm.genesis \
---vm-config-path=/tmp/tokenvm.config \
---subnet-config-path=/tmp/tokenvm.subnet \
+--vm-genesis-path=/tmp/weavedbvm.genesis \
+--vm-config-path=/tmp/weavedbvm.config \
+--subnet-config-path=/tmp/weavedbvm.subnet \
 --output-path=/tmp/avalanchego-v${VERSION}/output.yaml \
 --mode=${MODE}
 
