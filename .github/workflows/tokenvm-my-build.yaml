@@ -41,6 +41,16 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
+      - name: Build 
+        run: |
+          
+          cd ./examples/weavedbvm
+          ./scripts/build.sh
+          ls -la build/
+        # env:
+        #   MACOS_SDK_FNAME: MacOSX13.1.sdk.tar.xz
+        #   MACOS_SDK_CHECKSUM: efa167d0e463e40f9a3f3e95a2d4f265552834442872341d5669d3264ba9b702
+        # path: ./examples/weavedbvm
 
       - name: Build osxcross
         run: |
