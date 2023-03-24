@@ -12,68 +12,105 @@ on: [push]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04-16-cores
     steps:
-      - uses: actions/checkout@v3
-
+      - name: checkout
+        uses: actions/checkout@v3
       - name: set up go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.19
+          go-version: 1.20
+          check-latest: true
 
       - name: display go version
         run: go version
-        
-      # - name: go build
-      #   run: go build -v ./...
-      #   working-directory: ./examples/weavedbvm
 
+      - name: Set up arm64 cross compiler
+        run: sudo apt-get -y install gcc-aarch64-linux-gnu
+      
+      - name: Checkout osxcross
+        uses: actions/checkout@v2
+        with:
+          repository: tpoechtrager/osxcross
+          path: osxcross
+      
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
       - name: GITHUB_REF
         run: echo ${GITHUB_REF##*/}
 
-      - name: docker build
-        run: docker build  --platform linux/amd64  -t weavedbvm .
-        # working-directory: ./examples/weavedbvm
 
-      - name: docker tag1
-        run: docker tag  weavedbvm:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/weavedbvm:latest
-        # working-directory: ./examples/weavedbvm
-      - name: docker tag2
-        run: docker tag  weavedbvm:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/weavedbvm:`date +%Y-%m-%d-%H-%I-%S`-$GITHUB_SHA-${GITHUB_REF##*/}
-        # working-directory: ./examples/weavedbvm
+      # - name: Build osxcross
+      #   run: |
+      #     sudo apt-get -y install clang llvm-dev libxml2-dev uuid-dev libssl-dev bash patch make tar xz-utils bzip2 gzip sed cpio libbz2-dev
+      #     cd osxcross
+      #     wget https://github.com/joseluisq/macosx-sdks/releases/download/12.3/$MACOS_SDK_FNAME -O tarballs/$MACOS_SDK_FNAME
+      #     echo $MACOS_SDK_CHECKSUM tarballs/$MACOS_SDK_FNAME | sha256sum -c -
+      #     UNATTENDED=1 ./build.sh
+      #     echo $PWD/target/bin >> $GITHUB_PATH
+      #   env:
+      #     MACOS_SDK_FNAME: MacOSX12.3.sdk.tar.xz
+      #     MACOS_SDK_CHECKSUM: 3abd261ceb483c44295a6623fdffe5d44fc4ac2c872526576ec5ab5ad0f6e26c
+      # - name: Run GoReleaser
+      #   uses: goreleaser/goreleaser-action@v2
+      #   with:
+      #     distribution: goreleaser
+      #     version: latest
+      #     args: release
+      #     workdir: ./examples/tokenvm/
+      #   env:
+      #     # https://docs.github.com/en/actions/security-guides/automatic-token-authentication#about-the-github_token-secret
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Archive Builds
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: dist
+      #     path: ./examples/tokenvm/dist
 
-      # AWS Credentials
-      - name: create .aws
-        run: mkdir ~/.aws
-      - name: echo1
-        run: echo '[default]' > ~/.aws/credentials
-      - name: echo2
-        run: echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
-      - name: echo3
-        run: echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
 
-      - name: echo4
-        run: echo '[default]' > ~/.aws/config
-      - name: echo5
-        run: echo "region = ${{ secrets.AWS_MAIN_REGION }}" >> ~/.aws/config
 
-      # DOCKER PUSH
-      - name: docker login
-        run: aws ecr get-login-password --region ${{ secrets.AWS_MAIN_REGION }} |  docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION}}.amazonaws.com
-      - name: docker push
-        run: docker push  --all-tags ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/weavedbvm
+      # - name: docker build
+      #   run: docker build  --platform linux/amd64  -t weavedbvm .
+      #   # working-directory: ./examples/weavedbvm
+
+      # - name: docker tag1
+      #   run: docker tag  weavedbvm:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/weavedbvm:latest
+      #   # working-directory: ./examples/weavedbvm
+      # - name: docker tag2
+      #   run: docker tag  weavedbvm:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/weavedbvm:`date +%Y-%m-%d-%H-%I-%S`-$GITHUB_SHA-${GITHUB_REF##*/}
+      #   # working-directory: ./examples/weavedbvm
+
+      # # AWS Credentials
+      # - name: create .aws
+      #   run: mkdir ~/.aws
+      # - name: echo1
+      #   run: echo '[default]' > ~/.aws/credentials
+      # - name: echo2
+      #   run: echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+      # - name: echo3
+      #   run: echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+
+      # - name: echo4
+      #   run: echo '[default]' > ~/.aws/config
+      # - name: echo5
+      #   run: echo "region = ${{ secrets.AWS_MAIN_REGION }}" >> ~/.aws/config
+
+      # # DOCKER PUSH
+      # - name: docker login
+      #   run: aws ecr get-login-password --region ${{ secrets.AWS_MAIN_REGION }} |  docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION}}.amazonaws.com
+      # - name: docker push
+      #   run: docker push  --all-tags ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_MAIN_REGION }}.amazonaws.com/weavedbvm
 
       # - name: delete old docker image
       #   run: ./scripts/delete_old_docker_images.rb weavedbvm eu-west-1
       #   working-directory: ./examples/weavedbvm
 
 
-      - name: delete old docker image
-        run: ./scripts/delete_old_docker_images.rb weavedbvm ${{ secrets.AWS_MAIN_REGION }}
-        working-directory: ./examples/weavedbvm
+      # - name: delete old docker image
+      #   run: ./scripts/delete_old_docker_images.rb weavedbvm ${{ secrets.AWS_MAIN_REGION }}
+      #   working-directory: ./examples/weavedbvm
 
 
 
