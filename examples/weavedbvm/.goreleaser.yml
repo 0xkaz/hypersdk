@@ -3,9 +3,9 @@
 
 # ref. https://goreleaser.com/customization/build/
 builds:
-  - id: token-cli
-    main: ./cmd/token-cli
-    binary: token-cli
+  - id: weavedb-cli
+    main: ./cmd/weavedb-cli
+    binary: weavedb-cli
     flags:
       - -v
     goos:
@@ -31,9 +31,9 @@ builds:
         goamd64: v1
         env:
           - CC=o64-clang
-  - id: tokenvm
-    main: ./cmd/tokenvm
-    binary: tokenvm
+  - id: weavedbvm
+    main: ./cmd/weavedbvm
+    binary: weavedbvm
     flags:
       - -v
     goos:
@@ -62,5 +62,6 @@ builds:
 
 release:
   github:
-    owner: ava-labs
-    name: tokenvm
+    #owner: ava-labs
+    owner: 0xkaz
+    name: weavedbvm
