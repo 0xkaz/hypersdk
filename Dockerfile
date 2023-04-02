@@ -8,6 +8,8 @@ RUN apk upgrade
 RUN apk add vim
 RUN apk add bash
 
+
+
 #FROM alpine:latest
 #FROM golang:1.19-alpine as builder
 
@@ -21,8 +23,8 @@ RUN apk add bash
 # RUN git checkout v${VERSION}
 WORKDIR /myvm/examples/weavedbvm
 
-RUN ./scripts/build.sh 
-
+RUN /myvm/examples/weavedbvm/scripts/build.sh 
+RUN cp /myvm/examples/weavedbvm/build/* /usr/local/bin/
 # RUN go build -o /myvm main.go  && \
 #     chmod 777 /myvm
 
