@@ -37,14 +37,14 @@ var (
 
 func init() {
 	cobra.EnablePrefixMatching = true
-	// rootCmd.AddCommand(
-	// 	genesisCmd,
-	// 	versionCmd,
+	rootCmd.AddCommand(
+		// 	genesisCmd,
+		versionCmd,
 	// 	keyCmd,
 	// 	chainCmd,
 	// 	actionCmd,
 	// 	spamCmd,
-	// )
+	)
 	// rootCmd.PersistentFlags().StringVar(
 	// 	&dbPath,
 	// 	"database",

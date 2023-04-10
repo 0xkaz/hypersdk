@@ -24,7 +24,7 @@ do
 
   # then
     echo "LAST=$LAST"
-    echo "LAST2=$LAST2"
+    echo "LAST  2=$LAST2"
     rm -rf ./build/* || true
     LAST=$LAST2
 
@@ -48,7 +48,7 @@ do
 
     find ./build
     # ./build/token-cli version
-    ./build/token-cli version
+    ./build/weavedb-cli version
   fi
 
 done
