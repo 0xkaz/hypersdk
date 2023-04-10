@@ -36,16 +36,19 @@ do
 
     mkdir -p ./build
 
-    name="weavedbvm"
-    echo "Building weavedbvm in ./build/$name"
-    go build -o ./build/$name ./cmd/tokenvm
+    name="tokenvm"
+    echo "Building tokenvm in ./build/tokenvm"
+    go build -o ./build/tokenvm ./cmd/tokenvm
 
-    echo "Building weavedbvm-cli in ./build/token-cli"
-    go build -o ./build/weavedbvm-cli ./cmd/token-cli
+    echo "Building weavedb-cli in ./build/weavedb-cli"
+    go build -o ./build/weavedb-cli ./cmd/weavedb-cli
+
+    echo "Building token-cli in ./build/token-cli"
+    go build -o ./build/token-cli ./cmd/token-cli
 
     find ./build
     # ./build/token-cli version
-    ./build/weavedbvm-cli version
+    ./build/token-cli version
   fi
 
 done
