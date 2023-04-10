@@ -28,6 +28,11 @@ do
     rm -rf ./build/* || true
     LAST=$LAST2
 
+    # gofmt
+    test -z "$(gofmt -s -l -w  -d $(find . -type f -name '*.go' -not -path "*/vendor/*") | tee /dev/stderr)"
+    # govet 
+    test -z "$(go vet -all ./...  | tee /dev/stderr)"
+
 
     mkdir -p ./build
 
