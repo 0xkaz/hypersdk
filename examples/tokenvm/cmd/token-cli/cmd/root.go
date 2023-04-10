@@ -41,6 +41,7 @@ func init() {
 	cobra.EnablePrefixMatching = true
 	rootCmd.AddCommand(
 		genesisCmd,
+		versionCmd,
 		keyCmd,
 		chainCmd,
 		actionCmd,

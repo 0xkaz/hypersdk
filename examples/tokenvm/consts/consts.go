@@ -12,9 +12,11 @@ import (
 )
 
 const (
-	HRP    = "token"
-	Name   = "tokenvm"
-	Symbol = "TKN"
+	// HRP    = "token"
+	// Name   = "tokenvm"
+	HRP    = "weavedb"
+	Name   = "weavedbvm"
+	Symbol = "WDB"
 )
 
 var ID ids.ID

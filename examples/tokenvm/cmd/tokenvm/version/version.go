@@ -27,6 +27,9 @@ func NewCommand() *cobra.Command {
 }
 
 func versionFunc(*cobra.Command, []string) error {
-	fmt.Printf("%s@%s (%s)\n", consts.Name, version.Version, consts.ID)
+	fmt.Printf("%s", GetVersion())
 	return nil
+}
+func GetVersion() string {
+	return fmt.Sprintf("%s@%s (%s)\n", consts.Name, version.Version, consts.ID)
 }

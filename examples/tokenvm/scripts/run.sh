@@ -52,6 +52,7 @@ if [ ! -f "$AVALANCHEGO_PATH" ]; then
   # Download src
   cd /tmp/avalanchego-src
   git clone https://github.com/ava-labs/avalanchego.git
+  # git clone --depth 1 https://github.com/ava-labs/avalanchego.git
   cd avalanchego
   git checkout v${VERSION}
 

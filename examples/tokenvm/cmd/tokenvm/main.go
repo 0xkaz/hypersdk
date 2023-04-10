@@ -6,6 +6,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/ava-labs/avalanchego/utils/logging"
@@ -42,6 +43,7 @@ func main() {
 }
 
 func runFunc(*cobra.Command, []string) error {
+	log.Printf("aaa")
 	if err := ulimit.Set(ulimit.DefaultFDLimit, logging.NoLog{}); err != nil {
 		return fmt.Errorf("%w: failed to set fd limit correctly", err)
 	}
