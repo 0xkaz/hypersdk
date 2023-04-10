@@ -43,7 +43,7 @@ func main() {
 }
 
 func runFunc(*cobra.Command, []string) error {
-	log.Printf("aaa")
+	log.Printf("runFunc")
 	if err := ulimit.Set(ulimit.DefaultFDLimit, logging.NoLog{}); err != nil {
 		return fmt.Errorf("%w: failed to set fd limit correctly", err)
 	}

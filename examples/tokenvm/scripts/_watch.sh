@@ -25,15 +25,23 @@ do
   # then
     echo "LAST=$LAST"
     echo "LAST2=$LAST2"
-    rm ./build/* || true
+    rm -rf ./build/* || true
     LAST=$LAST2
-    ./scripts/build.sh
+
+
+    mkdir -p ./build
+
+    name="weavedbvm"
+    echo "Building weavedbvm in ./build/$name"
+    go build -o ./build/$name ./cmd/tokenvm
+
+    echo "Building weavedbvm-cli in ./build/token-cli"
+    go build -o ./build/weavedbvm-cli ./cmd/token-cli
+
     find ./build
-    ./build/token-cli version
-  # else
-  #   echo "..."
+    # ./build/token-cli version
+    ./build/weavedbvm-cli version
   fi
-  # sleep 1
 
 done
 
