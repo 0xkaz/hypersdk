@@ -36,9 +36,11 @@ do
 
     mkdir -p ./build
 
-    name="tokenvm"
     echo "Building tokenvm in ./build/tokenvm"
     go build -o ./build/tokenvm ./cmd/tokenvm
+
+    echo "Building weavedbvm in ./build/weavedbvm"
+    go build -o ./build/weavedbvm ./cmd/weavedbvm
 
     echo "Building weavedb-cli in ./build/weavedb-cli"
     go build -o ./build/weavedb-cli ./cmd/weavedb-cli

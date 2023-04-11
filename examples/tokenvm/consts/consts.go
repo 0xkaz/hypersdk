@@ -13,9 +13,9 @@ import (
 
 const (
 	// HRP    = "token"
-	// Name   = "tokenvm"
-	HRP    = "weavedb"
-	Name   = "weavedbvm"
+	Name = "tokenvm"
+	HRP  = "weavedb"
+	// Name   = "weavedbvm"
 	Symbol = "WDB"
 )
 

@@ -48,9 +48,11 @@ if [ ! -f "$AVALANCHEGO_PATH" ]; then
   mkdir -p /tmp/avalanchego-v${VERSION}
   rm -rf /tmp/avalanchego-src
   mkdir -p /tmp/avalanchego-src
+  mkdir -p /tmp/src-avalanchego
 
   # Download src
-  cd /tmp/avalanchego-src
+  # cd /tmp/avalanchego-src
+  cd /tmp/src-avalanchego
   git clone https://github.com/ava-labs/avalanchego.git
   # git clone --depth 1 https://github.com/ava-labs/avalanchego.git
   cd avalanchego
