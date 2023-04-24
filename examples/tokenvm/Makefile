@@ -3,10 +3,17 @@ _DATE := $(shell date +%Y-%m-%d-%H-%M-%S)
 
 buildsh:
 	./scripts/build.sh
-run:
+run: kill
 	./scripts/run.sh
 watch:
 	./scripts/watch.sh
 
-docker: 
-	docker build  --platform linux/amd64  -t $(_NAME) .
+kill:
+	ps auxww | grep avalanche | grep -v grep | awk '{print $$2}'|xargs  kill -9 
+
+
+
+
+
+
+
