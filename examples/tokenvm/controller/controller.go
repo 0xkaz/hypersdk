@@ -206,6 +206,7 @@ func (c *Controller) Accepted(ctx context.Context, blk *chain.StatelessBlock) er
 			return err
 		}
 		if result.Success {
+
 			switch action := tx.Action.(type) {
 			case *actions.CreateAsset:
 				c.metrics.createAsset.Inc()
@@ -259,6 +260,9 @@ func (c *Controller) Accepted(ctx context.Context, blk *chain.StatelessBlock) er
 				c.metrics.importAsset.Inc()
 			case *actions.ExportAsset:
 				c.metrics.exportAsset.Inc()
+			case *actions.TestAction:
+				log.Printf("actions.TestAction..")
+
 			}
 		}
 	}
