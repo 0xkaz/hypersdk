@@ -6,7 +6,6 @@ package controller
 import (
 	"context"
 	"fmt"
-
 	ametrics "github.com/ava-labs/avalanchego/api/metrics"
 	"github.com/ava-labs/avalanchego/database"
 	"github.com/ava-labs/avalanchego/snow"
@@ -18,6 +17,7 @@ import (
 	"github.com/ava-labs/hypersdk/utils"
 	"github.com/ava-labs/hypersdk/vm"
 	"go.uber.org/zap"
+	"log"
 
 	"github.com/ava-labs/hypersdk/examples/tokenvm/actions"
 	"github.com/ava-labs/hypersdk/examples/tokenvm/auth"
@@ -44,9 +44,11 @@ type Controller struct {
 	metaDB database.Database
 
 	orderBook *OrderBook
+	// myPool    *MyPool
 }
 
 func New() *vm.VM {
+	log.Printf("New")
 	return vm.New(&Controller{}, version.Version)
 }
 
@@ -69,6 +71,7 @@ func (c *Controller) Initialize(
 	chain.AuthRegistry,
 	error,
 ) {
+	log.Printf("Initialize")
 	c.inner = inner
 	c.snowCtx = snowCtx
 	c.stateManager = &StateManager{}
@@ -77,12 +80,14 @@ func (c *Controller) Initialize(
 	var err error
 	c.metrics, err = newMetrics(gatherer)
 	if err != nil {
+		log.Printf("c.metrics err: %v", err)
 		return nil, nil, nil, nil, nil, nil, nil, nil, nil, err
 	}
 
 	// Load config and genesis
 	c.config, err = config.New(c.snowCtx.NodeID, configBytes)
 	if err != nil {
+		log.Printf("c.config err: %v", err)
 		return nil, nil, nil, nil, nil, nil, nil, nil, nil, err
 	}
 	c.snowCtx.Log.SetLevel(c.config.GetLogLevel())
@@ -90,38 +95,47 @@ func (c *Controller) Initialize(
 
 	c.genesis, err = genesis.New(genesisBytes, upgradeBytes)
 	if err != nil {
+		log.Printf("genesis err: %v", err)
 		return nil, nil, nil, nil, nil, nil, nil, nil, nil, fmt.Errorf(
 			"unable to read genesis: %w",
 			err,
 		)
 	}
 	snowCtx.Log.Info("loaded genesis", zap.Any("genesis", c.genesis))
+	log.Printf("snowCtx.ChainDataDir: %v", snowCtx.ChainDataDir)
 
 	// Create DBs
 	blockPath, err := utils.InitSubDirectory(snowCtx.ChainDataDir, "block")
 	if err != nil {
+		log.Printf("blockPath err: %v", err)
 		return nil, nil, nil, nil, nil, nil, nil, nil, nil, err
 	}
 	// TODO: tune Pebble config based on each sub-db focus
 	cfg := pebble.NewDefaultConfig()
+	log.Printf("cfg: %v", cfg)
 	blockDB, err := pebble.New(blockPath, cfg)
 	if err != nil {
+		log.Printf("blockDB err: %v", err)
 		return nil, nil, nil, nil, nil, nil, nil, nil, nil, err
 	}
 	statePath, err := utils.InitSubDirectory(snowCtx.ChainDataDir, "state")
 	if err != nil {
+		log.Printf("statePath err: %v", err)
 		return nil, nil, nil, nil, nil, nil, nil, nil, nil, err
 	}
 	stateDB, err := pebble.New(statePath, cfg)
 	if err != nil {
+		log.Printf("stateDB err: %v", err)
 		return nil, nil, nil, nil, nil, nil, nil, nil, nil, err
 	}
 	metaPath, err := utils.InitSubDirectory(snowCtx.ChainDataDir, "metadata")
 	if err != nil {
+		log.Printf("metaPath err: %v", err)
 		return nil, nil, nil, nil, nil, nil, nil, nil, nil, err
 	}
 	c.metaDB, err = pebble.New(metaPath, cfg)
 	if err != nil {
+		log.Printf("metaDB err: %v", err)
 		return nil, nil, nil, nil, nil, nil, nil, nil, nil, err
 	}
 
@@ -129,9 +143,12 @@ func (c *Controller) Initialize(
 	apis := map[string]*common.HTTPHandler{}
 	endpoint, err := utils.NewHandler(consts.Name, &Handler{inner.Handler(), c})
 	if err != nil {
+		log.Printf("endpoint err: %v", err)
 		return nil, nil, nil, nil, nil, nil, nil, nil, nil, err
 	}
 	apis[vm.Endpoint] = endpoint
+	log.Printf("vm.Endpoint: %v", vm.Endpoint)
+	log.Printf("endpoint: %v", endpoint)
 
 	// Create builder and gossiper
 	var (
@@ -153,19 +170,24 @@ func (c *Controller) Initialize(
 
 	// Initialize order book used to track all open orders
 	c.orderBook = NewOrderBook(c, c.config.TrackedPairs)
+	// // test for my pool
+	// c.myPool = NewMyPool(c)
 	return c.config, c.genesis, build, gossip, blockDB, stateDB, apis, consts.ActionRegistry, consts.AuthRegistry, nil
 }
 
 func (c *Controller) Rules(t int64) chain.Rules {
+	log.Printf("Rules")
 	// TODO: extend with [UpgradeBytes]
 	return c.genesis.Rules(t)
 }
 
 func (c *Controller) StateManager() chain.StateManager {
+	log.Printf("StateManager")
 	return c.stateManager
 }
 
 func (c *Controller) Accepted(ctx context.Context, blk *chain.StatelessBlock) error {
+	log.Printf("Accepted")
 	batch := c.metaDB.NewBatch()
 	defer batch.Reset()
 
@@ -209,6 +231,15 @@ func (c *Controller) Accepted(ctx context.Context, blk *chain.StatelessBlock) er
 						actor,
 					},
 				)
+			// case *actions.AddPool:
+			// 	actor := auth.GetActor(tx.Auth)
+			// 	c.myPool.Add(
+			// 		&Pool{
+			// 			tx.ID(),
+			// 			tutils.Address(actor),
+			// 			actor,
+			// 		},
+			// 	)
 			case *actions.FillOrder:
 				c.metrics.fillOrder.Inc()
 				orderResult, err := actions.UnmarshalOrderResult(result.Output)
@@ -235,10 +266,12 @@ func (c *Controller) Accepted(ctx context.Context, blk *chain.StatelessBlock) er
 }
 
 func (*Controller) Rejected(context.Context, *chain.StatelessBlock) error {
+	log.Printf("Rejected")
 	return nil
 }
 
 func (*Controller) Shutdown(context.Context) error {
+	log.Printf("Shutdown")
 	// Do not close any databases provided during initialization. The VM will
 	// close any databases your provided.
 	return nil
