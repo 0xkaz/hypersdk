@@ -3,7 +3,9 @@ _DATE := $(shell date +%Y-%m-%d-%H-%M-%S)
 
 buildsh:
 	./scripts/build.sh
-run: kill
+run: 
+	./scripts/run.sh
+kill-run: kill
 	./scripts/run.sh
 watch:
 	./scripts/watch.sh
