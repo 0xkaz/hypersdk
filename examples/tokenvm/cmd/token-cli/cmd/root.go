@@ -145,6 +145,8 @@ func init() {
 		transferCmd,
 
 		createAssetCmd,
+		// test
+		testCreateCmd,
 		mintAssetCmd,
 		// burnAssetCmd,
 		// modifyAssetCmd,

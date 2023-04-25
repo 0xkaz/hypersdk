@@ -284,6 +284,9 @@ var watchChainCmd = &cobra.Command{
 					switch action := tx.Action.(type) {
 					case *actions.CreateAsset:
 						summaryStr = fmt.Sprintf("assetID: %s metadata:%s", tx.ID(), string(action.Metadata))
+					// test
+					case *actions.TestCreate:
+						summaryStr = fmt.Sprintf("TestCreate: assetID: %s metadata:%s", tx.ID(), string(action.Metadata))
 					case *actions.MintAsset:
 						amountStr := strconv.FormatUint(action.Value, 10)
 						assetStr := action.Asset.String()

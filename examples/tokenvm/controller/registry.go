@@ -22,7 +22,7 @@ func init() {
 	errs := &wrappers.Errs{}
 	errs.Add(
 		// When registering new actions, ALWAYS make sure to append at the end.
-		consts.ActionRegistry.Register(&actions.TestAction{}, actions.UnmarshalTestAction, false),
+		consts.ActionRegistry.Register(&actions.Transfer{}, actions.UnmarshalTestAction, false),
 
 		consts.ActionRegistry.Register(&actions.CreateAsset{}, actions.UnmarshalCreateAsset, false),
 		consts.ActionRegistry.Register(&actions.MintAsset{}, actions.UnmarshalMintAsset, false),
@@ -40,7 +40,8 @@ func init() {
 		consts.AuthRegistry.Register(&auth.ED25519{}, auth.UnmarshalED25519, false),
 
 		// test
-		consts.ActionRegistry.Register(&actions.Transfer{}, actions.UnmarshalTestAction, false),
+		consts.ActionRegistry.Register(&actions.TestAction{}, actions.UnmarshalTestAction, false),
+		consts.ActionRegistry.Register(&actions.TestCreate{}, actions.UnmarshalTestCreate, false),
 	)
 	if errs.Errored() {
 		panic(errs.Err)

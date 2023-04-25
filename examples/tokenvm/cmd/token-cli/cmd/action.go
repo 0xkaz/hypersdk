@@ -93,6 +93,55 @@ var transferCmd = &cobra.Command{
 	},
 }
 
+// test
+var testCreateCmd = &cobra.Command{
+	Use: "test-create",
+	RunE: func(*cobra.Command, []string) error {
+		ctx := context.Background()
+		_, _, factory, cli, err := defaultActor()
+		if err != nil {
+			return err
+		}
+
+		// Add metadata to token
+		promptText := promptui.Prompt{
+			Label: "metadata (can be changed later)",
+			Validate: func(input string) error {
+				if len(input) > actions.MaxMetadataSize {
+					return errors.New("input too large")
+				}
+				return nil
+			},
+		}
+		metadata, err := promptText.Run()
+		if err != nil {
+			return err
+		}
+
+		// Confirm action
+		cont, err := promptContinue()
+		if !cont || err != nil {
+			return err
+		}
+
+		// Generate transaction
+		submit, tx, _, err := cli.GenerateTransaction(ctx, nil, &actions.TestCreate{
+			Metadata: []byte(metadata),
+		}, factory)
+		if err != nil {
+			return err
+		}
+		if err := submit(ctx); err != nil {
+			return err
+		}
+		success, err := cli.WaitForTransaction(ctx, tx.ID())
+		if err != nil {
+			return err
+		}
+		printStatus(tx.ID(), success)
+		return nil
+	},
+}
 var createAssetCmd = &cobra.Command{
 	Use: "create-asset",
 	RunE: func(*cobra.Command, []string) error {

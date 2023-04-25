@@ -263,6 +263,8 @@ func (c *Controller) Accepted(ctx context.Context, blk *chain.StatelessBlock) er
 			case *actions.TestAction:
 				log.Printf("actions.TestAction..")
 
+			case *actions.TestCreate:
+				c.metrics.testCreate.Inc()
 			}
 		}
 	}
